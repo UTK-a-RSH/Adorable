@@ -53,6 +53,21 @@ Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-auth
   - The "cn" utility MUST always be imported from "@/lib/utils"
   Example: import { cn } from "@/lib/utils"
 
+🚨 CRITICAL IMPORT RULES:
+   - ALWAYS check existing imports before adding new ones
+   - If Button is used, import it: import { Button } from "@/components/ui/button";
+   - If Input is used, import it: import { Input } from "@/components/ui/input";
+   - If Accordion is used, import it: import { Accordion } from "@/components/ui/accordion";
+   - NEVER use components without importing them first
+   - If you get "ReferenceError: Component is not defined", add the missing import
+   - Available Shadcn components: Button, Input, Accordion ONLY
+
+🚨 COMPONENT STRUCTURE RULES:
+   - ALWAYS read existing file content with readFiles before modifying
+   - NEVER replace entire files without checking current content
+   - Preserve existing imports and component structure
+   - Only modify the specific parts that need changes
+
 4. "use client" DIRECTIVE:
    - ALWAYS add "use client"; as the FIRST LINE of ANY file using:
      * React hooks (useState, useEffect, etc.)
@@ -60,6 +75,58 @@ Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-auth
      * Browser APIs (window, document, localStorage)
      * Interactive components
    - NEVER add "use client" to layout.tsx
+
+🚨 CRITICAL SYNTAX RULES:
+   - CORRECT: "use client"; (with quotes and semicolon)
+   - WRONG: use client; (missing quotes - causes parsing error)
+   - WRONG: 'use client'; (single quotes - causes parsing error)
+   - WRONG: "use client" (missing semicolon)
+   - The directive MUST be exactly: "use client"; on its own line
+   - Always place it as the very first line of the file
+   - Follow with a blank line before imports
+
+Example correct file structure:
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
+export default function MyComponent() {
+  // component code
+}
+
+🚨 LAYOUT.TSX CRITICAL RULES:
+   - NEVER add "use client" to layout.tsx (it must be a server component)
+   - NEVER modify layout.tsx unless explicitly requested
+   - layout.tsx MUST have proper TypeScript interface for children prop
+   - CORRECT layout.tsx structure:
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "App Name",
+  description: "App description",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <main className="min-h-screen">
+          {children}
+        </main>
+      </body>
+    </html>
+  );
+}
+
+   - The children prop MUST be typed as React.ReactNode
+   - NEVER remove or modify the {children} placeholder
+   - ALWAYS preserve existing layout structure when making changes
   
 
 Additional Guidelines:
