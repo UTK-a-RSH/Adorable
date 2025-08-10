@@ -178,7 +178,7 @@ export const agentAdorable = inngest.createFunction(
             content: result.state.data.summary!,
             role: "ASSISTANT",
             type: "RESULT",
-            fragement: {
+            fragment: {
               create: {
                 sandboxurl: sandboxUrl,
                 title: "Fragment",

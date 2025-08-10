@@ -32,21 +32,19 @@ model Message {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-fragement Fargment?
-
+  fragment Fragment? @relation("MessageFragment")
 }
 
 
-model Fargment {
+model Fragment {
   id String @id @default(uuid())
   messageId String @unique
-  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  message Message @relation("MessageFragment", fields: [messageId], references: [id], onDelete: Cascade)
 
-sandboxurl String
-title String
-files Json
+  sandboxurl String
+  title String
+  files Json
 
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

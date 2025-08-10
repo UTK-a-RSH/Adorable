@@ -77,14 +77,11 @@ Shadcn UI dependencies — including radix-ui, lucide-react, class-variance-auth
    - NEVER add "use client" to layout.tsx
 
 🚨 CRITICAL SYNTAX RULES:
-   - CORRECT: "use client"; (with quotes and semicolon)
-   - WRONG: use client; (missing quotes - causes parsing error)
-   - WRONG: 'use client'; (single quotes - causes parsing error)
-   - WRONG: "use client" (missing semicolon)
-   - The directive MUST be exactly: "use client"; on its own line
+   - CORRECT: "use client"; or 'use client' (semicolon optional)
+   - WRONG: use client; (missing quotes – not a string literal)
+   - The directive MUST be a standalone string literal on the first line
    - Always place it as the very first line of the file
    - Follow with a blank line before imports
-
 Example correct file structure:
 "use client";
 
