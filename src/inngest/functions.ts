@@ -155,7 +155,7 @@ export const agentAdorable = inngest.createFunction(
        const result = await network.run(event.data.value);
        const isError = 
        !result.state.data.summary || 
-       Object.keys(result.state.data.files).length === 0;
+       Object.keys(result.state.data.files || {}).length === 0;
 
       const sandboxUrl = await step.run("get sandbox url", async () => {
         const sandbox = await getSandbox(sandboxId);
@@ -164,12 +164,28 @@ export const agentAdorable = inngest.createFunction(
       });
 
       await step.run("save-result", async () => {
+        // Get or create project if projectId is not provided
+        let projectId = event.data.projectId;
+        if (!projectId) {
+          console.warn("No projectId provided, getting or creating default project");
+          let project = await prisma.project.findFirst();
+          if (!project) {
+            project = await prisma.project.create({
+              data: { name: "Default Project" }
+            });
+          }
+          projectId = project.id;
+        }
+
         if(isError) {
           return await prisma.message.create({
             data: {
               content: "Something went wrong. Please try again later.",
               role: "ASSISTANT",
               type: "ERROR",
+              project: {
+                connect: { id: projectId }
+              }
             },
           });
         }
@@ -178,6 +194,9 @@ export const agentAdorable = inngest.createFunction(
             content: result.state.data.summary!,
             role: "ASSISTANT",
             type: "RESULT",
+            project: {
+              connect: { id: projectId }
+            },
             fragment: {
               create: {
                 sandboxurl: sandboxUrl,
