@@ -164,18 +164,6 @@ export const agentAdorable = inngest.createFunction(
       });
 
       await step.run("save-result", async () => {
-        // Get or create project if projectId is not provided
-        let projectId = event.data.projectId;
-        if (!projectId) {
-          console.warn("No projectId provided, getting or creating default project");
-          let project = await prisma.project.findFirst();
-          if (!project) {
-            project = await prisma.project.create({
-              data: { name: "Default Project" }
-            });
-          }
-          projectId = project.id;
-        }
 
         if(isError) {
           return await prisma.message.create({
@@ -183,20 +171,17 @@ export const agentAdorable = inngest.createFunction(
               content: "Something went wrong. Please try again later.",
               role: "ASSISTANT",
               type: "ERROR",
-              project: {
-                connect: { id: projectId }
-              }
+              project: event.data.projectId,
+              
             },
           });
         }
         return await prisma.message.create({
           data: {
+            project: event.data.projectId,
             content: result.state.data.summary!,
             role: "ASSISTANT",
             type: "RESULT",
-            project: {
-              connect: { id: projectId }
-            },
             fragment: {
               create: {
                 sandboxurl: sandboxUrl,
