@@ -7,6 +7,7 @@ import { PROMPT } from "@/prompt";
 import { prisma } from "@/lib/db";
 
 
+
 interface AgentState {
   summary: string | null;
   files: { [path: string]: string };
@@ -25,7 +26,7 @@ export const agentAdorable = inngest.createFunction(
         name: "code-agent",
         system: PROMPT,
         model: openai({ 
-          model: "openai/gpt-4o-mini", 
+          model: "google/gemini-2.0-flash-001", 
           apiKey: process.env.OPENROUTER_API_KEY, // open router API key
           baseUrl: "https://openrouter.ai/api/v1", // open router base URL
         }),
@@ -171,14 +172,14 @@ export const agentAdorable = inngest.createFunction(
               content: "Something went wrong. Please try again later.",
               role: "ASSISTANT",
               type: "ERROR",
-              project: event.data.projectId,
+              projectId: event.data.projectId,
               
             },
           });
         }
         return await prisma.message.create({
           data: {
-            project: event.data.projectId,
+            projectId: event.data.projectId,
             content: result.state.data.summary!,
             role: "ASSISTANT",
             type: "RESULT",
