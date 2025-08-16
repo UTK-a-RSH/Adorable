@@ -3,13 +3,17 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { MessageCard } from "./message-card";
 import { MessageForm } from "./message-form";
 import { useEffect, useRef } from "react";
+import { Fragment } from "@/generated/prisma/wasm";
+import { MessageLoading } from "./message-loading";
 
 
 interface Props {
     projectId: string;
+    activeFragment: Fragment | null;
+    setActiveFragment: (fragment: Fragment | null) => void;
 }
 
-export const MessageContainer = ({ projectId }: Props) => {
+export const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Props) => {
   const trpc = useTRPC();
   const { data: messages } = useSuspenseQuery(
     trpc.messages.getMany.queryOptions({
@@ -20,8 +24,12 @@ export const MessageContainer = ({ projectId }: Props) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
+  const lastMessage = messages[messages.length - 1];
+  const isLastMessageUser = lastMessage?.role === "USER";
+
   // Auto-scroll to newest message
   useEffect(() => {
+    const lastAssistantMessage = messages.findLast((message) => message.role === "ASSISTANT" && !!message.fragment);
     if (!scrollRef.current || !bottomRef.current) return;
     requestAnimationFrame(() => {
       try {
@@ -29,8 +37,12 @@ export const MessageContainer = ({ projectId }: Props) => {
       } catch {
         /* noop */
       }
+      if (lastAssistantMessage && lastAssistantMessage.fragment) {
+        setActiveFragment(lastAssistantMessage.fragment);
+      }
     });
-  }, [messages.length]);
+  }, [messages.length, messages, setActiveFragment]);
+  
 
   return (
     <div className="flex flex-col h-full min-h-0 w-full relative">
@@ -44,11 +56,12 @@ export const MessageContainer = ({ projectId }: Props) => {
               role={message.role}
               fragment={message.fragment}
               createdAt={message.createdAt}
-              isActiveFragment={false}
-              onFragmentClick={() => {}}
+              isActiveFragment={activeFragment?.id === message.fragment?.id}
+              onFragmentClick={() => setActiveFragment(message.fragment)}
               type={message.type}
             />
           ))}
+          {isLastMessageUser && <MessageLoading />}
           <div ref={bottomRef} />
         </div>
         {/* Gradient fade above form */}
