@@ -8,6 +8,7 @@ import { MessageContainer } from "../components/message-container";
 import { useState, Suspense } from "react";
 import { Fragment } from "@/generated/prisma";
 import { ProjectHeader } from "../components/project-header";
+import { FragmentWeb } from "../components/fragment-web";
 
 
 interface Props {
@@ -28,8 +29,8 @@ export const ProjectView = ({projectId }: Props) => {
             className="h-full w-full border rounded-lg shadow-sm bg-white"
         >
             <ResizablePanel
-                defaultSize={40}
-                minSize={5}
+                defaultSize={25}
+                minSize={15}
                 collapsible
                 className="p-6 border-r border-gray-200 bg-gray-50/50"
             >
@@ -41,12 +42,12 @@ export const ProjectView = ({projectId }: Props) => {
                 </div>
             </ResizablePanel>
 
-            {/* Draggable handle (use ResizableHandle from your library) */}
+            {/* Draggable handle */}
             <ResizableHandle withHandle className="bg-gray-200 hover:bg-blue-300 transition-colors" />
 
             <ResizablePanel
-                defaultSize={60}
-                minSize={15}
+                defaultSize={activeFragment ? 40 : 75}
+                minSize={25}
                 collapsible
                 className="flex flex-col bg-white"
             >
@@ -65,10 +66,27 @@ export const ProjectView = ({projectId }: Props) => {
                             </div>
                         }
                     >
-                        <MessageContainer projectId={projectId}  activeFragment={activeFragment} setActiveFragment={setActiveFragment} />
+                        <MessageContainer projectId={projectId} activeFragment={activeFragment} setActiveFragment={setActiveFragment} />
                     </Suspense>
                 </div>
             </ResizablePanel>
+
+            {/* Fragment panel - only show when there's an active fragment */}
+            {activeFragment && (
+                <>
+                    <ResizableHandle withHandle className="bg-gray-200 hover:bg-blue-300 transition-colors" />
+                    <ResizablePanel 
+                        defaultSize={35} 
+                        minSize={20}
+                        collapsible
+                        className="bg-gray-50"
+                    >
+                        <div className="h-full">
+                            <FragmentWeb data={activeFragment} />
+                        </div>
+                    </ResizablePanel>
+                </>
+            )}
         </ResizablePanelGroup>
     </div>
     );
