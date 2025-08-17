@@ -1,6 +1,6 @@
 import { inngest } from "./client";
 import {Sandbox} from "@e2b/code-interpreter"
-import { openai, createAgent, createTool, createNetwork , type Tool} from "@inngest/agent-kit";
+import { openai, createAgent, createTool, createNetwork , type Tool, gemini} from "@inngest/agent-kit";
 import {z} from "zod";
 import { getSandbox, lastAssistantTextMessage} from "./utils";
 import { PROMPT } from "@/prompt";
@@ -24,11 +24,11 @@ export const agentAdorable = inngest.createFunction(
     try {
       const codeAgent = createAgent<AgentState>({
         name: "code-agent",
-        system: PROMPT,
-        model: openai({ 
-          model: "google/gemini-2.0-flash-001", 
-          apiKey: process.env.OPENROUTER_API_KEY, // open router API key
-          baseUrl: "https://openrouter.ai/api/v1", // open router base URL
+        // Prompt hardening (Option A): explicitly restrict tool usage & forbid meta tokens
+        system: `${PROMPT}\n\nSTRICT TOOL ENFORCEMENT:\nYou may ONLY use these exact tool names: terminal, createOrUpdateFile, readFiles.\nANY other tool name is FORBIDDEN and will cause errors.\nNEVER output <|constrain|>json, <|json|>, or any angle-bracket tokens.\nIF you see yourself trying to use a non-existent tool, STOP and respond with plain text instead.\nTool names are case-sensitive. Use exactly: terminal, createOrUpdateFile, readFiles.`,
+        model: gemini({
+          model: "gemini-2.5-flash",
+          apiKey: process.env.GEMINI_API_KEY,
         }),
         tools: [
           createTool({
