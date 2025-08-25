@@ -27,7 +27,7 @@ export const agentAdorable = inngest.createFunction(
         // Prompt hardening (Option A): explicitly restrict tool usage & forbid meta tokens
         system: `${PROMPT}\n\nSTRICT TOOL ENFORCEMENT:\nYou may ONLY use these exact tool names: terminal, createOrUpdateFile, readFiles.\nANY other tool name is FORBIDDEN and will cause errors.\nNEVER output <|constrain|>json, <|json|>, or any angle-bracket tokens.\nIF you see yourself trying to use a non-existent tool, STOP and respond with plain text instead.\nTool names are case-sensitive. Use exactly: terminal, createOrUpdateFile, readFiles.`,
         model: gemini({
-          model: "gemini-2.5-flash",
+          model: "gemini-2.5-pro",
           apiKey: process.env.GEMINI_API_KEY,
         }),
         tools: [

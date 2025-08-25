@@ -14,10 +14,8 @@ import "prismjs/components/prism-jsx"
 import "prismjs/components/prism-tsx"
 import "prismjs/components/prism-css"
 import "prismjs/components/prism-json"
-import "prismjs/components/prism-bash"
-import "prismjs/components/prism-python"
-import "prismjs/components/prism-sql"
 import "./code-theme.css"
+
 
 interface EnhancedCodeViewProps {
   code: string
@@ -68,7 +66,7 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
   const getCodeHeight = () => {
     if (isExpanded) return "80vh"
     if (maxHeight) return maxHeight
-    
+
     // Auto-adjust based on content and screen size
     const baseHeight = Math.min(lineCount * 24 + 32, window.innerHeight * 0.6)
     const minHeight = 200
@@ -78,20 +76,34 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        duration: 0.4,
+        ease: [0.23, 1, 0.32, 1],
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg",
-        "hover:shadow-xl transition-all duration-300",
-        "dark:border-slate-700 dark:bg-slate-900",
+        "group relative flex flex-col overflow-hidden rounded-xl border bg-card shadow-lg",
+        "hover:shadow-xl transition-all duration-500 ease-out",
+        "border-border backdrop-blur-sm",
+        "hover:shadow-primary/5 hover:border-primary/20",
         isExpanded ? "fixed inset-4 z-50 shadow-2xl" : "min-h-[200px]",
         className,
       )}
+      whileHover={{
+        y: -2,
+        transition: { duration: 0.2, ease: "easeOut" },
+      }}
     >
       {/* Header */}
-      <motion.div 
-        className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 flex-shrink-0 dark:from-slate-800 dark:to-slate-800 dark:border-slate-700"
+      <motion.div
+        className={cn(
+          "flex items-center justify-between px-4 py-3 bg-muted/50 border-b border-border flex-shrink-0",
+          "backdrop-blur-sm",
+        )}
         layout="position"
       >
         <div className="flex items-center gap-3">
@@ -100,11 +112,11 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="h-8 w-8 p-0 rounded-full hover:bg-white/60 transition-colors duration-200 dark:hover:bg-slate-700"
+              className={cn("h-8 w-8 p-0 rounded-full transition-all duration-300", "hover:bg-accent hover:scale-110")}
             >
-              <motion.div 
-                animate={{ rotate: isCollapsed ? 0 : 90 }} 
-                transition={{ duration: 0.2 }}
+              <motion.div
+                animate={{ rotate: isCollapsed ? 0 : 90 }}
+                transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
               >
                 <ChevronRight className="h-4 w-4" />
               </motion.div>
@@ -113,60 +125,71 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
 
           {/* Language badge */}
           <div className="flex items-center gap-3">
-            <motion.div 
-              className="w-3 h-3 rounded-full bg-emerald-500 shadow-md" 
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
+            <motion.div
+              className="w-3 h-3 rounded-full bg-emerald-500 shadow-md"
+              animate={{
+                scale: [1, 1.2, 1],
+                boxShadow: [
+                  "0 0 0 0 rgba(16, 185, 129, 0.4)",
+                  "0 0 0 8px rgba(16, 185, 129, 0)",
+                  "0 0 0 0 rgba(16, 185, 129, 0)",
+                ],
+              }}
+              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
             />
-            <span className="text-sm font-semibold text-slate-700 uppercase tracking-wider dark:text-slate-300">
-              {language}
-            </span>
+            <span className="text-sm font-semibold text-foreground uppercase tracking-wider">{language}</span>
             {title && (
               <>
-                <span className="text-slate-400 dark:text-slate-500">•</span>
-                <span className="text-sm text-slate-600 dark:text-slate-400">{title}</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="text-sm text-muted-foreground">{title}</span>
               </>
             )}
-            <span className="text-xs text-slate-500 bg-slate-200 px-2 py-1 rounded-full dark:text-slate-400 dark:bg-slate-700">
+            <motion.span
+              className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full font-medium"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
               {lineCount} lines
-            </span>
+            </motion.span>
           </div>
         </div>
 
         {/* Action buttons */}
-        <motion.div 
+        <motion.div
           className="flex items-center gap-2"
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ delay: 0.1 }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
         >
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="h-8 px-3 text-xs hover:bg-white/60 transition-all duration-200 dark:hover:bg-slate-700"
+            className={cn("h-8 px-3 text-xs transition-all duration-300", "hover:bg-accent hover:scale-105")}
           >
-            {isExpanded ? (
-              <Minimize2 className="h-4 w-4 mr-1" />
-            ) : (
-              <Maximize2 className="h-4 w-4 mr-1" />
-            )}
+            <motion.div whileHover={{ rotate: 5 }} transition={{ duration: 0.2 }}>
+              {isExpanded ? <Minimize2 className="h-4 w-4 mr-1" /> : <Maximize2 className="h-4 w-4 mr-1" />}
+            </motion.div>
             {isExpanded ? "Minimize" : "Expand"}
           </Button>
-          
+
           <Button
             variant="ghost"
             size="sm"
             onClick={copyToClipboard}
-            className="h-8 px-3 text-xs hover:bg-white/60 opacity-70 group-hover:opacity-100 transition-all duration-200 dark:hover:bg-slate-700"
+            className={cn(
+              "h-8 px-3 text-xs transition-all duration-300",
+              "hover:bg-accent opacity-70 group-hover:opacity-100 hover:scale-105",
+            )}
           >
             <AnimatePresence mode="wait">
               {copied ? (
                 <motion.div
                   key="check"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
+                  initial={{ scale: 0, opacity: 0, rotate: -180 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  exit={{ scale: 0, opacity: 0, rotate: 180 }}
+                  transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
                   className="flex items-center gap-1"
                 >
                   <Check className="h-4 w-4 text-emerald-500" />
@@ -175,9 +198,10 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
               ) : (
                 <motion.div
                   key="copy"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
+                  initial={{ scale: 0, opacity: 0, rotate: -180 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  exit={{ scale: 0, opacity: 0, rotate: 180 }}
+                  transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
                   className="flex items-center gap-1"
                 >
                   <Copy className="h-4 w-4" />
@@ -195,90 +219,113 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
           <motion.div
             layout
             initial={{ height: 0, opacity: 0 }}
-            animate={{ 
-              height: "auto", 
+            animate={{
+              height: "auto",
               opacity: 1,
-              transition: { duration: 0.3, ease: "easeInOut" }
+              transition: {
+                duration: 0.4,
+                ease: [0.23, 1, 0.32, 1],
+                staggerChildren: 0.1,
+              },
             }}
-            exit={{ height: 0, opacity: 0 }}
+            exit={{
+              height: 0,
+              opacity: 0,
+              transition: { duration: 0.3 },
+            }}
             className="flex-1 overflow-hidden"
           >
             <motion.div
               className="relative h-full overflow-auto"
               style={{ height: getCodeHeight() }}
               layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
             >
               <pre className="relative m-0 p-0 bg-transparent h-full">
                 <div className="flex h-full">
                   {/* Line numbers */}
                   {showLineNumbers && (
-                    <motion.div 
-                      className="flex-shrink-0 select-none px-4 py-4 text-right text-sm text-slate-500 bg-gradient-to-b from-slate-50 to-slate-100 border-r border-slate-200 min-w-[4rem] font-mono dark:from-slate-800 dark:to-slate-850 dark:border-slate-700 dark:text-slate-400"
+                    <motion.div
+                      className={cn(
+                        "flex-shrink-0 select-none px-4 py-4 text-right text-sm min-w-[4rem] font-mono",
+                        "text-muted-foreground bg-muted/30 border-r border-border",
+                      )}
                       layout
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2, duration: 0.3 }}
                     >
                       {lines.map((_, index) => (
-                        <div key={index + 1} className="leading-6 h-6">
+                        <motion.div
+                          key={index + 1}
+                          className="leading-6 h-6 hover:text-foreground transition-colors duration-200"
+                          whileHover={{ scale: 1.05 }}
+                        >
                           {index + 1}
-                        </div>
+                        </motion.div>
                       ))}
                     </motion.div>
                   )}
 
                   {/* Code content */}
-                  <motion.div 
+                  <motion.div
                     className="flex-1 overflow-auto"
                     layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.4 }}
                   >
                     <code
                       ref={codeRef}
-                      className="block px-4 py-4 font-mono text-sm leading-6 h-full"
+                      className="block px-4 py-4 font-mono text-sm leading-6 h-full text-foreground"
                       style={{
                         fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', monospace",
                       }}
                     >
                       <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.1 }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4, duration: 0.3 }}
                         className="min-h-full"
-                        dangerouslySetInnerHTML={{ 
+                        dangerouslySetInnerHTML={{
                           __html: highlightedCode.replace(
-                            // Enhanced syntax highlighting with Tailwind classes
                             /(<span class="token )([^"]+)(">[^<]*<\/span>)/g,
                             (match, prefix, tokenType, suffix) => {
                               const colorMap: Record<string, string> = {
-                                'comment': 'text-slate-500 italic',
-                                'prolog': 'text-slate-500',
-                                'doctype': 'text-slate-500',
-                                'cdata': 'text-slate-500',
-                                'punctuation': 'text-slate-700 dark:text-slate-300',
-                                'property': 'text-blue-600 dark:text-blue-400',
-                                'tag': 'text-blue-600 dark:text-blue-400',
-                                'boolean': 'text-orange-600 dark:text-orange-400',
-                                'number': 'text-orange-600 dark:text-orange-400',
-                                'constant': 'text-orange-600 dark:text-orange-400',
-                                'symbol': 'text-blue-600 dark:text-blue-400',
-                                'selector': 'text-green-700 dark:text-green-400',
-                                'attr-name': 'text-violet-600 dark:text-violet-400',
-                                'string': 'text-green-700 dark:text-green-400',
-                                'char': 'text-green-700 dark:text-green-400',
-                                'builtin': 'text-cyan-600 dark:text-cyan-400',
-                                'operator': 'text-pink-600 dark:text-pink-400',
-                                'entity': 'text-pink-600 dark:text-pink-400',
-                                'url': 'text-blue-600 dark:text-blue-400 underline',
-                                'atrule': 'text-pink-600 dark:text-pink-400',
-                                'attr-value': 'text-green-700 dark:text-green-400',
-                                'keyword': 'text-pink-600 dark:text-pink-400 font-semibold',
-                                'function': 'text-violet-600 dark:text-violet-400',
-                                'class-name': 'text-yellow-600 dark:text-yellow-400',
-                                'regex': 'text-red-600 dark:text-red-400',
-                                'important': 'text-red-600 dark:text-red-400 font-bold',
-                                'variable': 'text-blue-600 dark:text-blue-400',
+                                comment: "text-muted-foreground italic opacity-75",
+                                prolog: "text-muted-foreground",
+                                doctype: "text-muted-foreground",
+                                cdata: "text-muted-foreground",
+                                punctuation: "text-foreground/80",
+                                property: "text-blue-600 dark:text-blue-400",
+                                tag: "text-blue-600 dark:text-blue-400",
+                                boolean: "text-orange-600 dark:text-orange-400",
+                                number: "text-orange-600 dark:text-orange-400",
+                                constant: "text-orange-600 dark:text-orange-400",
+                                symbol: "text-blue-600 dark:text-blue-400",
+                                selector: "text-green-700 dark:text-green-400",
+                                "attr-name": "text-violet-600 dark:text-violet-400",
+                                string: "text-green-700 dark:text-green-400",
+                                char: "text-green-700 dark:text-green-400",
+                                builtin: "text-cyan-600 dark:text-cyan-400",
+                                operator: "text-pink-600 dark:text-pink-400",
+                                entity: "text-pink-600 dark:text-pink-400",
+                                url: "text-blue-600 dark:text-blue-400 underline",
+                                atrule: "text-pink-600 dark:text-pink-400",
+                                "attr-value": "text-green-700 dark:text-green-400",
+                                keyword: "text-pink-600 dark:text-pink-400 font-semibold",
+                                function: "text-violet-600 dark:text-violet-400",
+                                "class-name": "text-yellow-600 dark:text-yellow-400",
+                                regex: "text-red-600 dark:text-red-400",
+                                important: "text-red-600 dark:text-red-400 font-bold",
+                                variable: "text-blue-600 dark:text-blue-400",
                               }
-                              const classes = colorMap[tokenType] || 'text-slate-700 dark:text-slate-300'
+                              const classes = colorMap[tokenType] || "text-foreground"
                               return `${prefix}${tokenType}" style="color: inherit" class="${classes}${suffix}`
-                            }
-                          )
+                            },
+                          ),
                         }}
                       />
                     </code>
@@ -297,7 +344,8 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="px-4 py-3 text-sm text-slate-600 bg-slate-50 border-t border-slate-200 dark:text-slate-400 dark:bg-slate-800 dark:border-slate-700"
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            className={cn("px-4 py-3 text-sm border-t", "text-muted-foreground bg-muted/30 border-border")}
           >
             <div className="flex items-center justify-between">
               <span>{lineCount} lines collapsed</span>
@@ -305,7 +353,10 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsCollapsed(false)}
-                className="text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                className={cn(
+                  "text-xs transition-all duration-300",
+                  "text-primary hover:text-primary/80 hover:bg-primary/10 hover:scale-105",
+                )}
               >
                 Show code
               </Button>
@@ -320,6 +371,7 @@ export const CodeView: React.FC<EnhancedCodeViewProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
           onClick={() => setIsExpanded(false)}
         />
