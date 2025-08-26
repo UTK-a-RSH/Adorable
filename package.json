@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.31.4",
+    "@clerk/themes": "^2.4.13",
     "@e2b/code-interpreter": "^1.5.1",
     "@hookform/resolvers": "^5.2.1",
     "@inngest/agent-kit": "^0.9.0",
@@ -25,6 +27,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@tabler/icons-react": "^3.34.1",
     "@tanstack/react-query": "^5.80.10",
     "@trpc/client": "^11.4.2",
     "@trpc/server": "^11.4.2",
@@ -35,6 +38,7 @@
     "date-fns": "^4.1.0",
     "geist": "^1.4.2",
     "inngest": "^3.40.1",
+    "ldrs": "^1.1.7",
     "lucide-react": "^0.536.0",
     "motion": "^12.23.12",
     "next": "15.3.4",

@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { useTRPC } from "@/trpc/client"
 import { useQuery } from "@tanstack/react-query"
 import { ExternalLink, FolderOpen } from "lucide-react"
@@ -100,50 +99,56 @@ export const ProjectsSidebar = () => {
                       }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Link href={`/projects/${project.id}`} className="block">
-                        <div className="flex items-center gap-3 p-3 rounded-lg bg-card/60 backdrop-blur-sm border border-border/50 hover:border-primary/30 hover:bg-card/80 transition-all duration-300 group relative overflow-hidden">
-                          {/* Hover gradient effect */}
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100"
-                            transition={{ duration: 0.3 }}
-                          />
-                          
-                          <motion.div 
-                            className="flex-shrink-0 relative"
-                            whileHover={{ rotate: 5 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <div className="p-1.5 bg-background/80 backdrop-blur-sm rounded-md border border-border/60 shadow-sm">
-                              <Image
-                                src="/logo.svg"
-                                alt=""
-                                width={20}
-                                height={20}
-                                className="rounded"
-                              />
-                            </div>
-                          </motion.div>
-                          
-                          <div className="flex-1 min-w-0 relative z-10">
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <h3 className="font-medium text-sm text-foreground truncate">
-                                {project.name}
-                              </h3>
-                              <motion.div
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 0, scale: 0.8 }}
-                                whileHover={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.2 }}
-                              >
-                                <ExternalLink className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                              </motion.div>
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                              {formatDistanceToNow(project.updatedAt, { addSuffix: true })}
-                            </p>
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-card/60 backdrop-blur-sm border border-border/50 hover:border-primary/30 hover:bg-card/80 transition-all duration-300 group relative overflow-hidden">
+                        {/* Overlay Link */}
+                        <Link 
+                          href={`/projects/${project.id}`} 
+                          className="block w-full h-full absolute inset-0 z-20"
+                          tabIndex={0}
+                          aria-label={`Open project ${project.name}`}
+                          role="button"
+                        />
+                        {/* Hover gradient effect */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100"
+                          transition={{ duration: 0.3 }}
+                        />
+                        
+                        <motion.div 
+                          className="flex-shrink-0 relative"
+                          whileHover={{ rotate: 5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <div className="p-1.5 bg-background/80 backdrop-blur-sm rounded-md border border-border/60 shadow-sm">
+                            <Image
+                              src="/logo.svg"
+                              alt=""
+                              width={20}
+                              height={20}
+                              className="rounded"
+                            />
                           </div>
+                        </motion.div>
+                        
+                        <div className="flex-1 min-w-0 relative z-10">
+                          <div className="flex items-center gap-1 mb-0.5">
+                            <h3 className="font-medium text-sm text-foreground truncate">
+                              {project.name}
+                            </h3>
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 0, scale: 0.8 }}
+                              whileHover={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <ExternalLink className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                            </motion.div>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {formatDistanceToNow(project.updatedAt, { addSuffix: true })}
+                          </p>
                         </div>
-                      </Link>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
