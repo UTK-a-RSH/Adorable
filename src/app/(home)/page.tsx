@@ -5,9 +5,12 @@ import { ProjectsSidebar } from "@/modules/home/project-list"
 import Image from "next/image"
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useClerk, useUser } from "@clerk/nextjs"
 
 const Page = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const {isSignedIn} = useUser();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const clerk = useClerk();
 
   return (
     <div className="min-h-screen w-full relative">
@@ -60,9 +63,10 @@ const Page = () => {
               transition={{ duration: 0.2 }}
               onClick={() => setIsSidebarOpen(false)}
             />
-            
-            {/* Sidebar */}
-            <motion.div
+
+
+            {isSignedIn ? (
+              <motion.div
               className="fixed top-0 right-0 z-50"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -74,9 +78,10 @@ const Page = () => {
                 duration: 0.4
               }}
               onMouseLeave={() => setIsSidebarOpen(false)}
-            >
+              >
               <ProjectsSidebar />
-            </motion.div>
+              </motion.div>
+            ) :  clerk.openSignIn()}
           </>
         )}
       </AnimatePresence>

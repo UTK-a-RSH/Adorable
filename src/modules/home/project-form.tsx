@@ -14,6 +14,7 @@ import { motion } from "motion/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useClerk } from "@clerk/nextjs";
 
 
 
@@ -29,6 +30,7 @@ const formSchema = z.object({
 
 export const ProjectForm = () => {
   const router = useRouter();
+  const clerk = useClerk();
   const trpc = useTRPC();
     const [isFocused, setIsFocused] = useState(false);
     const queryClient = useQueryClient();
@@ -47,7 +49,11 @@ export const ProjectForm = () => {
 
         onError: (error) => {
             toast.error(`Failed to send message: ${error.message}`);
-        }
+
+            if(error.data?.code === "UNAUTHORIZED") {
+              clerk.openSignIn(); // Redirect to home if project not found
+            }
+        },
     }));
     
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
