@@ -3,30 +3,41 @@ import { SignInButton, SignUpButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import { UseControl } from '../use-control';
 import { Button } from './button';
-import { LogIn, UserPlus } from 'lucide-react';
+import { LogIn, UserPlus, Github } from 'lucide-react';
 import Link from 'next/link';
 
 export default function GlassyNavbar() {
   const { isSignedIn } = useUser();
-
+  
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/10 dark:bg-black/10 border-b border-white/20 dark:border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-         <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16">
           {/* Logo Section - Top Left */}
-            <div className="flex items-center">
+          <div className="flex items-center">
             <Link href="/">
               <Image
-              src="/logo1.svg"
-              alt="Logo"
-              width={150}
-              height={32}
+                src="/logo1.svg"
+                alt="Logo"
+                width={150}
+                height={32}
               />
             </Link>
-            </div>
+          </div>
 
           {/* Auth Buttons */}
           <div className="flex items-center space-x-3">
+            {/* GitHub Repository Link */}
+            <Link 
+              href="https://github.com/UTK-a-RSH/Adorable" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button className="p-3 rounded-xl bg-white/20 dark:bg-white/10 backdrop-blur-sm border border-white/30 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-white/20 transition-all duration-200 hover:scale-105 active:bg-gradient-to-r active:from-yellow-400/60 active:to-amber-500/60 active:shadow-lg active:shadow-yellow-400/40 active:text-yellow-900 dark:active:text-yellow-100 active:scale-110">
+                <Github className="w-5 h-5" />
+              </Button>
+            </Link>
+
             {!isSignedIn && (
               <>
                 {/* Sign In Button */}
@@ -48,7 +59,7 @@ export default function GlassyNavbar() {
             {/* User Control Dropdown - Only show when signed in */}
             {isSignedIn && (
               <div className="relative flex justify-end w-40">
-              <UseControl showName={true} />
+                <UseControl showName={true} />
               </div>
             )}
           </div>
