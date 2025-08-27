@@ -28,7 +28,8 @@ const messages = await prisma.message.findMany({
   where: {
     projectId: event.data.projectId,
   },
-  orderBy: { createdAt: "desc" },
+  orderBy: { createdAt: "asc" },
+  take: 5,
 });
 
 for (const message of messages) {
@@ -38,7 +39,7 @@ for (const message of messages) {
     content: message.content,
   });
 }
-return formattedMessages;
+return formattedMessages.reverse();
 });
 
 const state = createState<AgentState>({
