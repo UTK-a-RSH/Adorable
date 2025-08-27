@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <img src="public/logo1.svg" alt="Adorable Logo" width="120" />
+</p>
 
-## Getting Started
+# Adorable
 
-First, run the development server:
+Adorable is a modern, full-stack AI-powered project workspace and code sandbox platform. It features real-time collaboration, project management, code execution, and beautiful UI/UX built with Next.js, Prisma, Clerk, TRPC, and Shadcn UI. Designed for developers, teams, and AI agents to build, test, and manage projects efficiently.
 
+---
+
+## 🚀 Features
+- **AI Agent Integration:** Run, test, and interact with AI agents in a secure sandbox.
+- **Project Management:** Create, edit, and manage multiple projects with real-time updates.
+- **Code Execution:** Safe, isolated code execution using E2B sandboxes.
+- **Authentication:** Secure sign-in/sign-up with Clerk.
+- **Usage Tracking:** Rate-limited API usage and project quotas.
+- **Rich UI/UX:** Responsive, accessible, and themeable interface using Shadcn UI and Tailwind CSS.
+- **Fragmented Code View:** Preview and explore code fragments and outputs.
+- **Error Boundaries:** Robust error handling for a seamless experience.
+
+---
+
+## 🛠️ Tech Stack
+- **Frontend:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS, Shadcn UI
+- **Backend:** Prisma ORM, PostgreSQL, TRPC, Clerk Auth, E2B Sandboxes
+- **State/Data:** React Query, Zustand, SuperJSON
+- **Other:** Framer Motion, Lucide Icons, Radix UI, LDRS loaders
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the Repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/UTK-a-RSH/Adorable.git
+cd adorable/adorable
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Configure Environment Variables
+Create a `.env` file in the root directory with the following variables:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+# Database
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE
 
-## Learn More
+# Clerk Auth
+CLERK_SECRET_KEY=your-clerk-secret-key
+CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key
 
-To learn more about Next.js, take a look at the following resources:
+# E2B Sandboxes
+E2B_API_KEY=your-e2b-api-key
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# OpenAI / Gemini (if using AI agents)
+OPENAI_API_KEY=your-openai-api-key
+GEMINI_API_KEY=your-gemini-api-key
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> **Note:** Replace all placeholder values with your actual credentials.
 
-## Deploy on Vercel
+### 4. Run Database Migrations
+```bash
+npx prisma migrate dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 5. Start the Development Server
+```bash
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app will be available at [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 📁 Project Structure
+- `src/app/` — Next.js app directory (pages, layouts, API routes)
+- `src/components/` — UI components (Shadcn, custom, etc.)
+- `src/modules/` — Feature modules (projects, messages, usage, etc.)
+- `src/lib/` — Utilities, database, and usage logic
+- `prisma/` — Prisma schema and migrations
+- `public/` — Static assets (including `logo1.svg`)
+
+---
+
+## 📝 Contributing
+Pull requests and issues are welcome! Please open an issue to discuss your ideas or report bugs.
+
+---
+
+
+

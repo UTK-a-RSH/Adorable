@@ -17,7 +17,7 @@ interface Props {
 
 export const MessageContainer = ({ projectId, activeFragment, setActiveFragment }: Props) => {
   const trpc = useTRPC();
-  const { data: messages, error } = useSuspenseQuery(
+  const { data: messages } = useSuspenseQuery(
     trpc.messages.getMany.queryOptions({
       projectId: projectId,
     })
@@ -25,15 +25,6 @@ export const MessageContainer = ({ projectId, activeFragment, setActiveFragment 
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const bottomRef = useRef<HTMLDivElement | null>(null)
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full w-full p-8">
-        <div className="text-red-500 font-semibold text-lg mb-2">Failed to load messages</div>
-        <div className="text-sm text-muted-foreground">{error.message || "An unknown error occurred."}</div>
-      </div>
-    );
-  }
 
   const lastMessage = messages[messages.length - 1];
   const isLastMessageUser = lastMessage?.role === "USER";

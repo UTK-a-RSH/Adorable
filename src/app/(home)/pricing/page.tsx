@@ -3,7 +3,6 @@
 import { PricingTable } from "@clerk/clerk-react";
 import Image from "next/image";
 import { dark } from "@clerk/themes";
-import { use } from "react";
 import { useCustomTheme } from "@/hooks/use-theme";
 
 
