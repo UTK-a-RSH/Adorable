@@ -19,9 +19,7 @@ import { useClerk } from "@clerk/nextjs";
 
 
 
-interface ProjectId {
-    projectId: string;
-}
+
 
 const formSchema = z.object({
   value: z.string()

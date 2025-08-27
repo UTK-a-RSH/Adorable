@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { UseControl } from '../use-control';
 import { Button } from './button';
 import { LogIn, UserPlus } from 'lucide-react';
+import Link from 'next/link';
 
 export default function GlassyNavbar() {
   const { isSignedIn } = useUser();
@@ -14,14 +15,14 @@ export default function GlassyNavbar() {
          <div className="flex justify-between items-center h-16">
           {/* Logo Section - Top Left */}
             <div className="flex items-center">
-            <a href="/">
+            <Link href="/">
               <Image
               src="/logo1.svg"
               alt="Logo"
               width={150}
               height={32}
               />
-            </a>
+            </Link>
             </div>
 
           {/* Auth Buttons */}
