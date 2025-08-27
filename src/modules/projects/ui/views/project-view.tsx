@@ -17,6 +17,7 @@ import { UseControl } from "@/components/use-control"
 import { Spinner} from "@/components/ui/spinner"
 import { SpinnerT } from "@/components/ui/spinnerT"
 import { useAuth } from "@clerk/nextjs"
+import { ErrorBoundary } from "react-error-boundary"
 
 interface Props {
   projectId: string
@@ -53,12 +54,13 @@ export const ProjectView = ({ projectId }: Props) => {
               <ProjectHeader projectId={projectId} />
             </div>
             <div className="flex-1 min-h-0 overflow-hidden">
-                <Suspense
-                  fallback={
-                    <div className="flex items-center justify-center h-full bg-background">
-                    <span className="block dark:hidden">
-                      <Spinner />
-                    </span>
+                <ErrorBoundary fallback={<p>Something went wrong</p>}>
+                  <Suspense
+                    fallback={
+                      <div className="flex items-center justify-center h-full bg-background">
+                      <span className="block dark:hidden">
+                        <Spinner />
+                      </span>
                     <span className="hidden dark:block">
                       <SpinnerT />
                     </span>
@@ -71,6 +73,7 @@ export const ProjectView = ({ projectId }: Props) => {
                   setActiveFragment={setActiveFragment}
                   />
                 </Suspense>
+                </ErrorBoundary>
             </div>
           </div>
         </ResizablePanel>
