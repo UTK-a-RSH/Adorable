@@ -8,9 +8,10 @@ import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Loader2Icon, SendIcon } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { Usage } from "./usage";
 
 
 
@@ -27,8 +28,13 @@ const formSchema = z.object({
 export const MessageForm = ({ projectId }: ProjectId) => {
     const trpc = useTRPC();
     const [isFocused, setIsFocused] = useState(false);
-    const [showUsage, setShowUsage] = useState(false);
+    
     const queryClient = useQueryClient();
+
+    const {data: usage} = useQuery(trpc.usage.status.queryOptions())
+    
+    const showUsage = !!usage;
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -60,6 +66,12 @@ export const MessageForm = ({ projectId }: ProjectId) => {
     const isDisabled = isPending || !form.formState.isValid;
   return (
     <Form {...form}>
+      {showUsage && (
+        <Usage
+          points={usage.remainingPoints}
+          msBeforeNext={usage.msBeforeNext}
+        />
+      )}
      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("relative border p-4 pt-1 rounded-xl bg-sidebar dark:bg-sidebar transition-all overflow-visible w-full", isFocused && "shadow-xs", showUsage && "rounded-l-none",)}>
         <FormField
           control={form.control}

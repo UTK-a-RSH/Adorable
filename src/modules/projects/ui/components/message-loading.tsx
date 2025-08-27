@@ -63,18 +63,7 @@ export const MessageLoading = () => {
               }}
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-md"
-            animate={{ 
-              opacity: [0.3, 0.6, 0.3],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-              />
+             
               <Image 
             src="/logo1.svg" 
             className='shrink-0 relative z-10' 

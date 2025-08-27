@@ -10,12 +10,13 @@ import type { Fragment } from "@/generated/prisma"
 import { ProjectHeader } from "../components/project-header"
 import { FragmentWeb } from "../components/fragment-web"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Eye, Code } from "lucide-react"
+import { Eye, Code, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FileExplorer } from "@/components/file-explorer"
 import { UseControl } from "@/components/use-control"
 import { Spinner} from "@/components/ui/spinner"
 import { SpinnerT } from "@/components/ui/spinnerT"
+import { useAuth } from "@clerk/nextjs"
 
 interface Props {
   projectId: string
@@ -25,6 +26,8 @@ export const ProjectView = ({ projectId }: Props) => {
   const [activeFragment, setActiveFragment] = useState<Fragment | null>(null)
   const [tabState, setTabState] = useState<"preview" | "code">("preview")
   const trpc = useTRPC()
+  const {has} = useAuth();
+  const hasProAccess = has?.({plan: "pro"});
   const { data: project } = useSuspenseQuery(
     trpc.projects.getOne.queryOptions({
       id: projectId,
@@ -104,11 +107,14 @@ export const ProjectView = ({ projectId }: Props) => {
                       Code
                     </TabsTrigger>
                   </TabsList>
-                  <Link href="/pricing">
-                    <Button size="sm">
-                      Upgrade
-                    </Button>
-                  </Link>
+                 {!hasProAccess && (
+                   <Link href="/pricing">
+                     <Button size="sm" className="flex items-center gap-2">
+                       <Crown className="h-4 w-4" />
+                       Upgrade
+                     </Button>
+                   </Link>
+                 )}
                   <UseControl />
                 </div>
                 

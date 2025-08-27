@@ -75,19 +75,18 @@ export function ProjectHeader({ projectId }: ProjectHeaderProps) {
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="group relative overflow-hidden transition-all duration-300 hover:bg-accent/50 hover:border-accent-foreground/20 hover:shadow-sm active:scale-95 bg-transparent"
-              >
-                <h1 className="text-xl font-semibold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text transition-all duration-200 group-hover:from-accent-foreground group-hover:to-accent-foreground/80">
-                  {project?.name}
-                </h1>
-                <ChevronDownIcon className="h-4 w-4 ml-2 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-
-                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-              </Button>
-            </DropdownMenuTrigger>
+  <Button
+    variant="outline"
+    size="sm"
+    className="group relative overflow-hidden transition-all duration-300 hover:bg-white/20 dark:hover:bg-white/10 hover:border-white/30 dark:hover:border-white/20 hover:shadow-lg active:scale-95 bg-white/10 dark:bg-white/5 backdrop-blur-sm border-white/20 dark:border-white/10"
+  >
+    <h1 className="text-xl font-semibold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text transition-all duration-200 group-hover:from-accent-foreground group-hover:to-accent-foreground/80">
+      {project?.name}
+    </h1>
+    <ChevronDownIcon className="h-4 w-4 ml-2 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+  </Button>
+</DropdownMenuTrigger>
 
             <DropdownMenuContent
               className="animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-popover/95 backdrop-blur-sm border border-border/50 shadow-lg"
