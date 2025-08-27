@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/logo1.svg" alt="Adorable Logo" width="120" />
+  <img src="public/logo1.svg" alt="Adorable Logo" width="200" height="200 />
 </p>
 
 # Adorable
