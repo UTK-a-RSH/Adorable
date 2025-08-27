@@ -55,6 +55,9 @@ CLERK_PUBLISHABLE_KEY=your-clerk-publishable-key
 # E2B Sandboxes
 E2B_API_KEY=your-e2b-api-key
 
+# Inngest
+INNGEST_EVENT_KEY=your-inngest-event-key
+
 # OpenAI / Gemini (if using AI agents)
 OPENAI_API_KEY=your-openai-api-key
 GEMINI_API_KEY=your-gemini-api-key
